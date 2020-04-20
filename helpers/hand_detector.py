@@ -55,8 +55,6 @@ class HandDetector(ModelMixin):
         with opencv_video_capture(webcam_index) as cap:
             while True:
                 ret, frame = cap.read()
-                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-                frame = frame[210:-210, 30:-150]
                 predictions, probabilities = self.detector.predictImage(
                     frame, result_count=3, input_type="array"
                 )

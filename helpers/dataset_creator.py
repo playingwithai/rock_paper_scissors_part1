@@ -41,8 +41,6 @@ class DataSetCreator:
         with opencv_video_capture(self.webcam_index) as cap:
             while True:
                 _, frame = cap.read()
-                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-                frame = frame[210:-210, 30:-150]
                 cv2.imshow("Frame", frame)
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord(" "):
