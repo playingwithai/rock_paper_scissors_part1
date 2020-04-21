@@ -37,11 +37,10 @@ class DataSetCreator:
     def _acquire_image(self, move):
         path = os.path.join(execution_path, self.dataset_name, move)
         counter = self._get_image_last_index(path)
-        print(counter)
         with opencv_video_capture(self.webcam_index) as cap:
             while True:
                 _, frame = cap.read()
-                cv2.imshow("Frame", frame)
+                cv2.imshow("Image acquisition", frame)
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord(" "):
                     cv2.imwrite(
@@ -90,38 +89,6 @@ class DataSetCreator:
                     os.path.join(move_path, image), os.path.join(test_path, move, image)
                 )
 
-    def _convert_to_grayscale(self):
-        for dataset in ("train", "test"):
-            base_path = os.path.join(execution_path, self.dataset_name, dataset)
-            for move in ["rock", "paper", "scissors"]:
-                move_path = os.path.join(base_path, move)
-                with click.progressbar(
-                    os.listdir(move_path), label=f"Converting {move_path}"
-                ) as items:
-                    for item in items:
-                        item_path = os.path.join(move_path, item)
-                        if not os.path.isfile(item_path):
-                            continue
-                        image = cv2.imread(item_path)
-                        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                        cv2.imwrite(item_path, gray_image)
-
-    def _canny_edge_conversion(self, threshold1=100, threshold2=50):
-        for dataset in ("train", "test"):
-            base_path = os.path.join(execution_path, self.dataset_name, dataset)
-            for move in ["rock", "paper", "scissors"]:
-                move_path = os.path.join(base_path, move)
-                with click.progressbar(
-                    os.listdir(move_path), label=f"Canny edge conversion {move_path}"
-                ) as items:
-                    for item in items:
-                        item_path = os.path.join(move_path, item)
-                        if not os.path.isfile(item_path):
-                            continue
-                        image = cv2.imread(item_path)
-                        gray_image = cv2.Canny(image, threshold1, threshold2)
-                        cv2.imwrite(item_path, gray_image)
-
     def create_dataset(self):
         # Create dataset directory
         self._create_dataset_dir(self.dataset_name)
@@ -129,8 +96,4 @@ class DataSetCreator:
         self._create_move_dataset()
         # Split train and test dataset
         self._split_train_test_dataset()
-        # Optional gray conversion
-        # self._convert_to_grayscale()
-        # # Optional canny edge conversion
-        # self._canny_edge_conversion()
         click.echo("Dataset created")

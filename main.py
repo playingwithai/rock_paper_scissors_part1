@@ -2,8 +2,10 @@ import click
 
 from helpers.dataset_creator import DataSetCreator
 from helpers.dataset_downloader import DataSetDownloader
-from helpers.hand_detector import HandDetector
-from helpers.model_trainer import ModelTrainer
+from helpers.move_prediction import RockPaperScissorsPredictor
+
+
+predictor = RockPaperScissorsPredictor()
 
 
 def download_dataset():
@@ -12,18 +14,16 @@ def download_dataset():
 
 
 def create_dataset():
-    dc = DataSetCreator(webcam_index=1)
+    dc = DataSetCreator()
     dc.create_dataset()
 
 
 def train_model():
-    mt = ModelTrainer()
-    mt.train()
+    predictor.train()
 
 
 def detect_hand_from_webcam():
-    hd = HandDetector()
-    hd.detect_from_webcam(webcam_index=1)
+    predictor.detect_move_from_webcam()
 
 
 COMMANDS = {
